@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Conexión - Chat de Tests</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .chat-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #fafafa;
+        }
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+        .user-message {
+            background-color: #007bff;
+            color: white;
+            margin-left: auto;
+            text-align: right;
+        }
+        .bot-message {
+            background-color: #e9ecef;
+            color: #333;
+        }
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+        #messageInput {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        #sendButton {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #sendButton:hover {
+            background-color: #0056b3;
+        }
+        #sendButton:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .status {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .status.connected {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.testing {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .test-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .test-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .test-btn.primary {
+            background-color: #17a2b8;
+            color: white;
+        }
+        .test-btn.secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        .user-id-container {
+            margin-bottom: 15px;
+        }
+        #userIdInput {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test de Conexión - Chat de Tests Psicológicos</h1>
+        
+        <div id="connectionStatus" class="status disconnected">
+            🔴 Verificando conexión...
+        </div>
+
+        <div class="user-id-container">
+            <label for="userIdInput">ID de Usuario:</label>
+            <input type="text" id="userIdInput" value="test-user-123" placeholder="Ingresa tu ID de usuario">
+        </div>
+
+        <div class="test-buttons">
+            <button class="test-btn primary" onclick="testConnection()">🔗 Probar Conexión</button>
+            <button class="test-btn secondary" onclick="startNewChat()">🆕 Iniciar Chat</button>
+            <button class="test-btn secondary" onclick="clearChat()">🗑️ Limpiar Chat</button>
+        </div>
+
+        <div class="chat-container" id="chatContainer">
+            <div class="message bot-message">
+                <strong>Sistema:</strong> Bienvenido al chat de tests. Haz clic en "Probar Conexión" para verificar que todo funciona correctamente.
+            </div>
+        </div>
+
+        <div class="input-container">
+            <input type="text" id="messageInput" placeholder="Escribe tu mensaje aquí..." onkeypress="handleKeyPress(event)">
+            <button id="sendButton" onclick="sendMessage()">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        const SERVER_URL = 'http://localhost:3003';
+        let isConnected = false;
+
+        // Función para actualizar el estado de conexión
+        function updateConnectionStatus(connected, message = '') {
+            const statusElement = document.getElementById('connectionStatus');
+            if (connected) {
+                statusElement.className = 'status connected';
+                statusElement.innerHTML = '🟢 Conectado correctamente' + (message ? ` - ${message}` : '');
+                isConnected = true;
+            } else {
+                statusElement.className = 'status disconnected';
+                statusElement.innerHTML = '🔴 Sin conexión' + (message ? ` - ${message}` : '');
+                isConnected = false;
+            }
+        }
+
+        // Probar conexión con el servidor
+        async function testConnection() {
+            const statusElement = document.getElementById('connectionStatus');
+            statusElement.className = 'status testing';
+            statusElement.innerHTML = '🟡 Probando conexión...';
+
+            try {
+                const response = await fetch(`${SERVER_URL}/`, {
+                    method: 'GET',
+                });
+
+                if (response.ok) {
+                    const data = await response.text();
+                    updateConnectionStatus(true, 'Servidor responde correctamente');
+                    addMessage('Sistema', `✅ Conexión exitosa: ${data}`, 'bot');
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                updateConnectionStatus(false, `Error: ${error.message}`);
+                addMessage('Sistema', `❌ Error de conexión: ${error.message}`, 'bot');
+            }
+        }
+
+        // Iniciar nuevo chat
+        async function startNewChat() {
+            const userId = document.getElementById('userIdInput').value.trim();
+            if (!userId) {
+                alert('Por favor ingresa un ID de usuario');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${SERVER_URL}/chat/start`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        user_name: `Usuario ${userId}`
+                    })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    addMessage('Sistema', `✅ ${data.message} (ID: ${data.conversation_id})`, 'bot');
+                    // Enviar primer mensaje automáticamente
+                    setTimeout(() => sendMessage('hola'), 1000);
+                } else {
+                    addMessage('Sistema', `❌ Error: ${data.error}`, 'bot');
+                }
+            } catch (error) {
+                addMessage('Sistema', `❌ Error al iniciar chat: ${error.message}`, 'bot');
+            }
+        }
+
+        // Enviar mensaje
+        async function sendMessage(customMessage = null) {
+            const messageInput = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            const userId = document.getElementById('userIdInput').value.trim();
+            
+            const message = customMessage || messageInput.value.trim();
+
+            if (!message || !userId) {
+                if (!userId) alert('Por favor ingresa un ID de usuario');
+                return;
+            }
+
+            // Mostrar mensaje del usuario
+            addMessage('Tú', message, 'user');
+            
+            if (!customMessage) {
+                messageInput.value = '';
+            }
+            sendButton.disabled = true;
+
+            try {
+                const response = await fetch(`${SERVER_URL}/chat/message`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        user_id: userId
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    addMessage('Agente', data.response || data.message, 'bot');
+                    updateConnectionStatus(true, 'Intercambio exitoso');
+                } else {
+                    addMessage('Sistema', `❌ Error: ${data.error}`, 'bot');
+                }
+            } catch (error) {
+                addMessage('Sistema', `❌ Error de comunicación: ${error.message}`, 'bot');
+                updateConnectionStatus(false, error.message);
+            }
+
+            sendButton.disabled = false;
+        }
+
+        // Agregar mensaje al chat
+        function addMessage(sender, message, type) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type === 'user' ? 'user-message' : 'bot-message'}`;
+            
+            // Formatear el mensaje para mejor legibilidad
+            const formattedMessage = message.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            messageDiv.innerHTML = `<strong>${sender}:</strong> ${formattedMessage}`;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Limpiar chat
+        function clearChat() {
+            const chatContainer = document.getElementById('chatContainer');
+            chatContainer.innerHTML = '<div class="message bot-message"><strong>Sistema:</strong> Chat limpiado. Puedes empezar una nueva conversación.</div>';
+        }
+
+        // Manejar Enter en el input
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Probar conexión automáticamente al cargar
+        window.onload = function() {
+            setTimeout(testConnection, 1000);
+        };
+    </script>
+</body>
+</html>
