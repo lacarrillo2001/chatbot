@@ -1,0 +1,7 @@
+flask
+flask-cors
+python-dotenv
+langchain
+openai
+pymongo
+psycopg2-binary
