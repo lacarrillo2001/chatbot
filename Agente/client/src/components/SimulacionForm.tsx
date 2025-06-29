@@ -14,6 +14,7 @@ const SimulacionForm: React.FC<{ onCreated: () => void; onCancel: () => void }> 
     descripcion: "",
     objetivo: "",
     escenarios: [],
+    usuario_id: ""
   });
 
   const handleAddPaso = () => {
