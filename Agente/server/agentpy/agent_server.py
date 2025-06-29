@@ -94,7 +94,9 @@ groq_apa_key = os.getenv("GROQ_API_KEY")
 
 simulador = AgenteSimuladorLlm(groq_apa_key)
 
-
+@app.route('/')
+def home():
+    return "Servidor Flask activo"
 
 @app.route('/agent', methods=['POST'])
 def agent_route():
