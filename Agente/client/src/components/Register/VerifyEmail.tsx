@@ -10,7 +10,7 @@ const VerifyEmail: React.FC = () => {
   useEffect(() => {
     const verify = async () => {
       try {
-        const baseUrl = import.meta.env.VITE_API_AUTH || 'http://localhost:3003/api/auth';
+        const baseUrl = import.meta.env.VITE_API_AUTH;
         const url = `${baseUrl}/verify-email/${token}`;
 
         console.log("🧪 Token recibido:", token);

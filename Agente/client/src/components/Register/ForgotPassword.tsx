@@ -18,8 +18,10 @@ export const ForgotPassword: React.FC = () => {
     }
 
     setIsLoading(true);
+        const baseUrl = import.meta.env.VITE_API_AUTH;
+        const url = `${baseUrl}/forgot-password`;
     try {
-      const res = await fetch('http://localhost:3003/api/auth/forgot-password', {
+      const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ correo }),

@@ -38,8 +38,10 @@ const Register: React.FC<Props> = ({ onLoginClick }) => {
     setError(null);
     setMessage(null);
     
+    const baseUrl = import.meta.env.VITE_API_AUTH;
+        const url = `${baseUrl}/register`;
     try {
-      const response = await axios.post("http://localhost:3003/api/auth/register", {
+      const response = await axios.post(url, {
         ...form,
         username: form.username.trim(),
         password: form.password.trim(),
