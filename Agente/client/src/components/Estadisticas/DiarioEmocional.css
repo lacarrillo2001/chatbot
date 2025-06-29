@@ -1,0 +1,572 @@
+.diario-emocional {
+  padding: 0;
+  max-width: 100%;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+/* Navegación por pestañas - Estilo minimalista */
+.navegacion-tabs {
+  display: flex;
+  border-bottom: 1px solid #e1e5e9;
+  margin-bottom: 0;
+  overflow-x: auto;
+  background: white;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  padding: 16px 24px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: fit-content;
+  border-bottom: 2px solid transparent;
+}
+
+.tab-button:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.tab-button.active {
+  background-color: #f8fafc;
+  color: #1f2937;
+  border-bottom: 2px solid #3b82f6;
+  font-weight: 600;
+}
+
+.tab-button:first-child {
+  border-radius: 0;
+}
+
+.tab-button:last-child {
+  border-radius: 0;
+}
+
+/* Contenido de las pestañas */
+.tab-content {
+  min-height: 400px;
+  animation: fadeIn 0.2s ease-in-out;
+  padding: 24px;
+  background: #f8fafc;
+  min-height: calc(100vh - 200px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Resumen/Dashboard */
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: white;
+  color: #1f2937;
+  padding: 24px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #3b82f6;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Cards generales */
+.card {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 16px;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.card h2 {
+  margin-top: 0;
+  color: #1f2937;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.card h3 {
+  margin-top: 0;
+  color: #1f2937;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.card h4 {
+  margin-top: 0;
+  color: #374151;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.card p {
+  margin: 8px 0;
+  line-height: 1.6;
+  color: #4b5563;
+  font-size: 14px;
+}
+
+.card small {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+/* Test cards específicas */
+.test-card {
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-left: 4px solid #f59e0b;
+}
+
+.test-card h4 {
+  color: #92400e;
+  margin-bottom: 16px;
+}
+
+.puntaje-total {
+  font-size: 18px;
+  font-weight: 700;
+  color: #dc2626;
+  background-color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  display: inline-block;
+  margin: 8px 0;
+  border: 1px solid #fee2e2;
+}
+
+.puntaje-detalle {
+  background-color: #f3f4f6;
+  padding: 16px;
+  border-radius: 6px;
+  margin: 12px 0;
+  border-left: 3px solid #9ca3af;
+}
+
+/* Emoción cards */
+.emocion-card {
+  background: #f0f9ff;
+  border: 1px solid #0ea5e9;
+  border-left: 4px solid #0ea5e9;
+}
+
+.emocion-card h4 {
+  color: #0c4a6e;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.emocion-identificada {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0c4a6e;
+  background-color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 16px;
+  border: 1px solid #bae6fd;
+}
+
+/* Interpretación */
+.interpretacion {
+  white-space: pre-wrap;
+  background-color: #f9fafb;
+  padding: 16px;
+  border-radius: 6px;
+  border-left: 3px solid #6b7280;
+  margin: 16px 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #374151;
+}
+
+/* Gráficos */
+.grafico-contenedor {
+  margin-top: 16px;
+  padding: 16px;
+  background-color: #f9fafb;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+.grafico-titulo {
+  color: #1f2937;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Sección de comparaciones */
+.comparacion-section {
+  background: white;
+  color: #1f2937;
+  padding: 0;
+  border-radius: 0;
+  margin-bottom: 0;
+}
+
+.comparacion-section h2 {
+  color: #1f2937;
+  margin-bottom: 24px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.comparacion-section h3 {
+  color: #1f2937;
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.comparacion-card {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 24px;
+}
+
+.comparacion-card .grafico-contenedor {
+  background-color: #f9fafb;
+  color: #1f2937;
+}
+
+/* Estados vacíos */
+.estado-vacio {
+  text-align: center;
+  padding: 48px 32px;
+  color: #6b7280;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.estado-vacio-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.estado-vacio h3 {
+  color: #1f2937;
+  margin-bottom: 12px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.estado-vacio p {
+  margin-bottom: 24px;
+  line-height: 1.6;
+  color: #4b5563;
+  font-size: 14px;
+}
+
+/* Botones de acción */
+.botones-accion {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.boton-accion {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.boton-accion:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.boton-accion.secundario {
+  background: #10b981;
+}
+
+.boton-accion.secundario:hover {
+  background: #059669;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+/* Sugerencias */
+.sugerencias {
+  background: #fef3c7;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 16px 0;
+  text-align: left;
+  border: 1px solid #f59e0b;
+  border-left: 4px solid #f59e0b;
+}
+
+.sugerencias h4 {
+  color: #92400e;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.sugerencias ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sugerencias li {
+  padding: 6px 0;
+  color: #78350f;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.sugerencias li::before {
+  content: "✨";
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Estado de bienvenida */
+.bienvenida {
+  background: #3b82f6;
+  color: white;
+  padding: 32px;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 24px;
+  border: 1px solid #2563eb;
+}
+
+.bienvenida h2 {
+  margin-bottom: 12px;
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+}
+
+.bienvenida p {
+  font-size: 16px;
+  margin-bottom: 0;
+  opacity: 0.9;
+  color: white;
+}
+
+/* Fechas */
+.fecha {
+  font-style: normal;
+  color: #9ca3af;
+  font-size: 12px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+  font-weight: 500;
+}
+
+/* Clases adicionales para mejorar legibilidad */
+.puntaje-destacado {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.fecha-pequena {
+  font-style: normal;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .diario-emocional {
+    padding: 0;
+  }
+  
+  .tab-content {
+    padding: 16px;
+  }
+  
+  .navegacion-tabs {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+  
+  .tab-button {
+    padding: 12px 16px;
+    font-size: 13px;
+    min-width: 120px;
+  }
+  
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+  
+  .card {
+    padding: 16px;
+  }
+  
+  .stat-number {
+    font-size: 1.5rem;
+  }
+  
+  .botones-accion {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .boton-accion {
+    justify-content: center;
+  }
+  
+  .estado-vacio {
+    padding: 32px 16px;
+  }
+  
+  .sugerencias {
+    padding: 16px;
+  }
+  
+  .bienvenida {
+    padding: 24px 16px;
+  }
+}
+
+/* Scroll suave */
+.tab-content {
+  scroll-behavior: smooth;
+}
+
+/* Animaciones sutiles */
+.card, .stat-card {
+  opacity: 0;
+  animation: slideUp 0.3s ease forwards;
+}
+
+.card:nth-child(1) { animation-delay: 0.05s; }
+.card:nth-child(2) { animation-delay: 0.1s; }
+.card:nth-child(3) { animation-delay: 0.15s; }
+.card:nth-child(4) { animation-delay: 0.2s; }
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mejoras adicionales para recharts */
+.recharts-wrapper {
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.recharts-cartesian-axis-tick-value {
+  font-size: 12px;
+  fill: #6b7280;
+}
+
+.recharts-legend-wrapper {
+  font-size: 12px;
+}
+
+/* Estilos para tooltips de gráficos */
+.recharts-default-tooltip {
+  background: white !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Mejoras para accesibilidad */
+.tab-button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.boton-accion:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Estados de carga/hover para mejor UX */
+.card:not(:hover) {
+  transition: all 0.2s ease;
+}
+
+.tab-button:not(.active):hover {
+  transform: translateY(-1px);
+}

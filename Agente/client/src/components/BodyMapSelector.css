@@ -1,0 +1,9 @@
+.bodymap-selector {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.bodymap-image {
+  max-width: 300px;
+  height: auto;
+}
