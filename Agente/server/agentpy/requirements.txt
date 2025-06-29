@@ -3,6 +3,7 @@ flask-cors
 python-dotenv
 langchain
 langchain-openai
+langchain-groq
 openai
 pymongo
 psycopg2-binary
