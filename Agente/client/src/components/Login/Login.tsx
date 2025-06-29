@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./Login.css";
 
+
 interface Props {
   onLoginSuccess: (token: string, userId: string) => void;
   onRegisterClick?: () => void;
@@ -18,8 +19,11 @@ const Login: React.FC<Props> = ({ onLoginSuccess, onRegisterClick , onForgotClic
     setIsLoading(true);
     setError(null);
     
+
+    const baseUrl = import.meta.env.VITE_API_AUTH;
+        const url = `${baseUrl}/login`;
     try {
-      const res = await axios.post("http://localhost:3003/api/auth/login", {
+      const res = await axios.post(url, {
         username,
         password
       });
