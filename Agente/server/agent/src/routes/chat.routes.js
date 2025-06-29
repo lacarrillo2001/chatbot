@@ -56,8 +56,9 @@ router.post("/message", async (req, res) => {
   };
   conversation.messages.push(userMessage);
 
+  const url = import.meta.env.VITE_API_AGENTPYTHON;
   try {
-    const response = await axios.post("http://localhost:5000/agent", {
+    const response = await axios.post(url, {
       message: message,
       user_id: user_id,
     });

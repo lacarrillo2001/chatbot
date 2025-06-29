@@ -134,7 +134,9 @@ if (finalResponses.length > 6) {
   });
 
   try {
-    const response = await axios.post("http://localhost:5000/emotion_responses", {
+    
+    const url = import.meta.env.VITE_API_EMOTION;
+    const response = await axios.post(url, {
       user_id: userId,
       emotion: emotion,
       responses: finalResponses,
