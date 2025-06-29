@@ -1,0 +1,9 @@
+services:
+  - type: static
+    name: frontend-app
+    env: node
+    buildCommand: npm run build
+    staticPublishPath: dist
+    buildFilter:
+      paths:
+        - client/**/*
