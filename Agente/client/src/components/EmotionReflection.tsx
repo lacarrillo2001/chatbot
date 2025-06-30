@@ -9,9 +9,11 @@ interface EmotionReflectionProps {
   onAnswer: (answer: string) => void;
   userId: string;
   onResetEmotion: () => void;
+  onEmocionRegistrada: () => void;
+
 }
 
-const EmotionReflection: React.FC<EmotionReflectionProps> = ({ emotion, onAnswer, userId, onResetEmotion }) => {
+const EmotionReflection: React.FC<EmotionReflectionProps> = ({ emotion, onAnswer, userId, onResetEmotion, onEmocionRegistrada }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(-1);  
   const [answer, setAnswer] = useState<string>("");  
   const [responses, setResponses] = useState<string[]>([]);  
@@ -136,6 +138,7 @@ if (finalResponses.length > 6) {
   try {
     
     const url = import.meta.env.VITE_API_EMOTION;
+    console.log(url)
     const response = await axios.post(url, {
       user_id: userId,
       emotion: emotion,
@@ -146,6 +149,19 @@ if (finalResponses.length > 6) {
     });
 
     setAnalysis(response.data.analysis);
+
+    // ✅ Actualizar etapa cuando se recibe el análisis
+    await fetch(`http://localhost:3003/api/usuarios/${userId}/etapa`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ nuevaEtapa: "emocion_registrada" }),
+    });
+
+    onEmocionRegistrada(); // Notifica a App para cambiar etapa y módulo
+
+
   } catch (error) {
     console.error("❌ Error al enviar las respuestas:", error);
   } finally {

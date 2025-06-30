@@ -321,6 +321,8 @@ def emotion_responses():
     emotion = data.get('emotion')
     responses = data.get('responses')
     situation = data.get('situation') 
+    body_location=data.get("body_location"),
+    body_sensation=data.get("body_sensation")
     
     # Imprimir los datos en la consola para verificar
     print(f"User ID: {user_id}")

@@ -23,7 +23,7 @@ class AgenteSimuladorLlm:
             model_name="meta-llama/llama-4-scout-17b-16e-instruct",
             api_key=api_key
         )
-        self.db_connection = obtener_conexion_db()
+        
 
     def cargar_simulaciones(self, ruta):
         with open(ruta, encoding="utf-8") as f:
@@ -147,7 +147,7 @@ class AgenteSimuladorLlm:
         """
         try:
             # Ejecutar la consulta para obtener las situaciones asociadas al usuario
-            resultados = ejecutar_query(self.db_connection, query, (user_id,), tipo="select")
+            resultados = ejecutar_query(query, (user_id,), tipo="select")
 
             if resultados:
                 print(f"SITUACIONES ENCONTRADAS: {resultados}")
@@ -371,7 +371,7 @@ class AgenteSimuladorLlm:
         """
         try:
             # Ejecutar la consulta para verificar si ya existe la simulación
-            resultados = ejecutar_query(self.db_connection, query, (user_id, f"%{situacion}%"), tipo="select")
+            resultados = ejecutar_query(query, (user_id, f"%{situacion}%"), tipo="select")
             print(f"Simulaciones existentes para el usuario {user_id}: {resultados}")
             return resultados  # Si hay resultados, significa que la simulación ya existe
         except Exception as e:
@@ -392,9 +392,9 @@ class AgenteSimuladorLlm:
             comentario,                  # generado por el LLM
             datetime.now()               # timestamp
         )
-        conn = obtener_conexion_db()
-        ejecutar_query(conn, query, params, tipo="insert")
-        conn.close()
+        
+        ejecutar_query(query, params, tipo="insert")
+
 
 
 

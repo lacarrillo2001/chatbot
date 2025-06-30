@@ -53,11 +53,11 @@ export const register = async (req, res) => {
     const userId = result.rows[0].id;
 
     // 🧩 5. Insertar en tabla usuarios
-   await pool.query(
-      `INSERT INTO public.usuarios (id, seudonimo, permisos, fecha_registro)
-      VALUES ($1, $2, $3, NOW())`,
-      [userId, username, '{}']  // ✅ Solo 3 parámetros, como corresponde
-    );
+      await pool.query(
+        `INSERT INTO public.usuarios (id, seudonimo, permisos, fecha_registro, etapa_flujo)
+        VALUES ($1, $2, $3, NOW(), $4)`,
+        [userId, username, '{}', 'inicio']
+      );
     // 🔐 6. Insertar en inicio_sesion
     await pool.query(
       `INSERT INTO public.inicio_sesion (id, username, contrasena, fecha_ultimo_inicio)

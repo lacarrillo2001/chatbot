@@ -55,67 +55,62 @@ def generate_analysis(responses, situation):
     return response.content if hasattr(response, 'content') else str(response)
 
 # Función para guardar los resultados en la base de datos
-def guardar_resultados(user_id, emotion, situation, responses):
+def guardar_resultados(user_id, emotion, situation, responses, body_location=None, body_sensation=None):
     record_id = str(uuid.uuid4())
-    emocion_id = None  # Para almacenar el ID de la emoción
+    emocion_id = None
     fecha_respuesta = datetime.utcnow()
 
-   #print(f"Guardando resultados para el usuario {user_id} con emoción {emotion} y situación {situation}")
-    #print(f"Respuestas: {responses}")
-
     try:
-        # Obtener conexión a la base de datos
-        connection = obtener_conexion_db()
+        if len(responses) < 6:
+            print(f"❌ Error: se esperaban 6 respuestas, pero se recibieron {len(responses)}")
+            return False
 
-        # Verificar si la emoción ya existe en la base de datos
+        # Verificar si la emoción ya existe
         query = "SELECT id FROM public.emociones WHERE emocion_identificada = %s AND usuario_id = %s"
-        params = (emotion,)
-        emocion_existente = ejecutar_query(connection, query, params, tipo="select")
+        params = (emotion, user_id)
+        emocion_existente = ejecutar_query(query, params, tipo="select")
 
         if not emocion_existente:
-            # Si no existe, insertamos una nueva emoción
-            emocion_id = str(uuid.uuid4())  # Generar un nuevo UUID para la emoción
+            emocion_id = str(uuid.uuid4())
             query = """
             INSERT INTO public.emociones (id, emocion_identificada, usuario_id)
             VALUES (%s, %s, %s)
             """
             params = (emocion_id, emotion, user_id)
-            ejecutar_query(connection, query, params, tipo="insert")
+            ejecutar_query(query, params, tipo="insert")
         else:
-            emocion_id = emocion_existente[0][0]  # Recuperamos el ID de la emoción existente
+            emocion_id = emocion_existente[0][0]
 
-        # Insertar los resultados de las respuestas en la tabla "situaciones_respuestas"
+        # Insertar respuestas y sensaciones físicas en la base
         query = """
         INSERT INTO public.situaciones_respuestas (
             id, emocion_id, descripcion_situacion, 
             respuesta_1, respuesta_2, respuesta_3, 
             respuesta_4, respuesta_5, respuesta_6, 
-            fecha_respuesta)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+            fecha_respuesta, ubicacion_cuerpo, sensacion_cuerpo)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
         """
-        
         params = (
-            record_id,  # ID generado para las respuestas
-            emocion_id,  # ID de la emoción asociada
-            situation,  # Descripción de la situación
-            responses[0],  # Respuesta 1
-            responses[1],  # Respuesta 2
-            responses[2],  # Respuesta 3
-            responses[3],  # Respuesta 4
-            responses[4],  # Respuesta 5
-            responses[5],  # Respuesta 6
-            fecha_respuesta,  # Fecha de la respuesta
+            record_id,
+            emocion_id,
+            situation,
+            responses[0],
+            responses[1],
+            responses[2],
+            responses[3],
+            responses[4],
+            responses[5],
+            fecha_respuesta,
+            body_location,
+            body_sensation
         )
 
-        if len(responses) < 6:
-            print(f"❌ Error: se esperaban 6 respuestas, pero se recibieron {len(responses)}")
-            return False
-
-        # Ejecutar la consulta para insertar los datos
-        ejecutar_query(connection, query, params, tipo="insert")
- 
+        ejecutar_query(query, params, tipo="insert")
+        print("✅ Resultados guardados correctamente.")
         return True
+
     except Exception as e:
-        print(f"Error al guardar los resultados: {str(e)}")
+        print(f"❌ Error al guardar los resultados: {str(e)}")
         return False
+
 
