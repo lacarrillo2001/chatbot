@@ -17,7 +17,7 @@ import ResetPassword from './components/Register/ResetPassword';
 import ForgotPassword from './components/Register/ForgotPassword';
 import EtapaInfoModal from './components/Etapa/EtapaInfoModal';
 
-
+////Componenete
 
 interface ChatState {
   messages: Message[];
@@ -174,14 +174,14 @@ const getModulosDisponibles = (): Module[] => {
       const aiMessage = createMessage(aiResponse.response, 'ai');*/
 
       const aiResponse = await response.json();
-      console.log("📦 aiResponse:", aiResponse); 
+      console.log("📦 aiResponses:", aiResponse); 
      const aiMessage = {
         ...createMessage(aiResponse.response, 'ai'),
         is_test_question: !!aiResponse.is_test_question,
         test_type: aiResponse.test_type ?? null,
         fase: aiResponse.fase ?? null,
       };
-      console.log("🧠 aiMessage.fase:", aiMessage.fase); 
+      console.log("🧠 aiMessage.fases:", aiMessage.fase); 
       // Si el test ha finalizado, actualizar etapa
         // Si el test ha finalizado, actualizar etapa
           if (
