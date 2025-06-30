@@ -2,9 +2,10 @@ import psycopg2
 from dotenv import load_dotenv
 import os
 import logging
+
 logger = logging.getLogger(__name__)
 
-# Cargar las variables de entorno
+# Cargar variables de entorno
 load_dotenv()
 
 def obtener_conexion_db():
@@ -25,31 +26,32 @@ def obtener_conexion_db():
 
     return psycopg2.connect(**conn_params)
 
-
-def ejecutar_query(connection, query, params=None, tipo="select"):
-    cursor = connection.cursor()
+# ✅ Maneja conexión y cursor internamente
+def ejecutar_query(query, params=None, tipo="select"):
+    connection = None
     try:
-        logger.info("🟢 Ejecutando query SQL:")
-        logger.info("Query: %s", query)
-        logger.info("Params: %s", params)
+        connection = obtener_conexion_db()
+        with connection.cursor() as cursor:
+            logger.info("🟢 Ejecutando query SQL:")
+            logger.info("Query: %s", query)
+            logger.info("Params: %s", params)
 
-        cursor.execute(query, params)
-        if tipo in ["insert", "update", "delete"]:
-            connection.commit()
-        if tipo == "select":
-            return cursor.fetchall()
+            cursor.execute(query, params)
+            if tipo in ["insert", "update", "delete"]:
+                connection.commit()
+            if tipo == "select":
+                return cursor.fetchall()
     except Exception as e:
-        logger.error("❌ Error en la consulta SQL", exc_info=True)
-        logger.error("Query: %s", query)
-        logger.error("Params: %s", params)
-        connection.rollback()
+        if connection:
+            connection.rollback()
+        logger.error("❌ Error ejecutando query SQL", exc_info=True)
         return None
     finally:
-        cursor.close()
+        if connection:
+            connection.close()
 
-
+# ✅ Ya no maneja la conexión afuera, simplemente llama a la query
 def obtener_preguntas_y_opciones(test_id):
-    conexion = obtener_conexion_db()
     query = """
     SELECT 
         pt.id AS pregunta_id, 
@@ -65,4 +67,4 @@ def obtener_preguntas_y_opciones(test_id):
     WHERE t.id = %s
     ORDER BY pt.id, op.orden;
     """
-    return ejecutar_query(conexion, query, (test_id,), tipo="select")
+    return ejecutar_query(query, (test_id,), tipo="select")
