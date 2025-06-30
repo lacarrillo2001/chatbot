@@ -65,7 +65,16 @@ def guardar_resultado_test(user_id, test_id, puntaje_social, puntaje_rendimiento
         INSERT INTO public.resultados_test (usuario_id, test_id, puntuacion_total, interpretacion, fecha,"puntaje_social(miedo )", "puntaje_rendimiento(evitacion)")
         VALUES (%s, %s, %s, %s, %s, %s, %s)
     """
+    params = (str(user_id), test_id, puntaje_total, interpretacion, fecha, puntaje_social, puntaje_rendimiento)
+
+    print("📤 Enviando datos al INSERT:")
+    print("Query:", query)
+    print("Params:", params)
+    
     ejecutar_query(db_connection, query, (str(user_id), test_id, puntaje_total, interpretacion, fecha,puntaje_social,puntaje_rendimiento), tipo="insert")
+    
+
+
 
 def detectar_test_desde_mensaje(message: str) -> str:
     """
