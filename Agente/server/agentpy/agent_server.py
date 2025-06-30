@@ -53,16 +53,15 @@ tools = [responder_test]
 agent = create_openai_tools_agent(llm=llm, tools=tools, prompt=prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools, memory=memory, verbose=True)
 
-# Conexión a la base de datos
-db_connection = obtener_conexion_db()
 
-def guardar_resultado_test(user_id, test_id, puntaje_social, puntaje_rendimiento,interpretacion):
+def guardar_resultado_test(user_id, test_id, puntaje_social, puntaje_rendimiento, interpretacion):
     puntaje_total = puntaje_social + puntaje_rendimiento
     fecha = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     interpretacion = interpretar_resultados(puntaje_total, puntaje_rendimiento, puntaje_social, test_id)
 
     query = """
-        INSERT INTO public.resultados_test (usuario_id, test_id, puntuacion_total, interpretacion, fecha,"puntaje_social(miedo )", "puntaje_rendimiento(evitacion)")
+        INSERT INTO public.resultados_test 
+        (usuario_id, test_id, puntuacion_total, interpretacion, fecha, "puntaje_social(miedo )", "puntaje_rendimiento(evitacion)")
         VALUES (%s, %s, %s, %s, %s, %s, %s)
     """
     params = (str(user_id), test_id, puntaje_total, interpretacion, fecha, puntaje_social, puntaje_rendimiento)
@@ -70,8 +69,10 @@ def guardar_resultado_test(user_id, test_id, puntaje_social, puntaje_rendimiento
     print("📤 Enviando datos al INSERT:")
     print("Query:", query)
     print("Params:", params)
-    
-    ejecutar_query(db_connection, query, (str(user_id), test_id, puntaje_total, interpretacion, fecha,puntaje_social,puntaje_rendimiento), tipo="insert")
+
+    # ✅ Abrir y cerrar la conexión internamente
+    ejecutar_query(query, params, tipo="insert")
+
     
 
 
@@ -97,8 +98,7 @@ def detectar_test(message: str) -> str | None:
 
     return None  # No hay intención clara de hacer test
 
-# Crear el agente
-db_connection = obtener_conexion_db()
+
 groq_apa_key = os.getenv("GROQ_API_KEY")
 
 simulador = AgenteSimuladorLlm(groq_apa_key)
