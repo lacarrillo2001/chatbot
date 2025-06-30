@@ -1,5 +1,7 @@
 import express from "express";
 import axios from "axios";
+import dotenv from 'dotenv';
+dotenv.config(); 
 
 const router = express.Router();
 
@@ -56,8 +58,8 @@ router.post("/message", async (req, res) => {
   };
   conversation.messages.push(userMessage);
 
-  const url = import.meta.env.VITE_API_AGENTPYTHON;
-  console.log("🌐 URL del backend:", url);
+  const url = process.env.API_AGENTPYTHON;
+  console.log("Backend URL:", url);
 
   try {
     const response = await axios.post(url, {
