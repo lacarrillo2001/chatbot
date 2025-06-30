@@ -51,9 +51,11 @@ router.post("/message", async (req, res) => {
     content: message,
     timestamp: new Date().toISOString(),
   });
+const url = `${process.env.API_AGENTPYTHON}/simulador`;
+console.log("Backend URL:", url);
 
   try {
-    const response = await axios.post("http://localhost:5000/simulador", {
+    const response = await axios.post("url", {
       message,
       user_id,
     });
