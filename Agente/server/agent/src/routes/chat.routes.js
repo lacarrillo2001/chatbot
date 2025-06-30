@@ -149,8 +149,8 @@ router.post("/legacy-agent", async (req, res) => {
   const { message, user_id } = req.body;
   if (!message || !user_id) return res.status(400).json({ error: "Faltan parámetros" });
 
-    const url = process.env.API_AGENTPYTHON;
-  console.log("Backend URL:", url);
+  const url = `${process.env.API_AGENTPYTHON}/agent`;
+console.log("Backend URL:", url);
   try {
     const response = await axios.post(url, {
       message: message,
