@@ -57,7 +57,8 @@ router.post("/message", async (req, res) => {
   conversation.messages.push(userMessage);
 
   const url = import.meta.env.VITE_API_AGENTPYTHON;
-  console.log(url);
+  console.log("🌐 URL del backend:", url);
+
   try {
     const response = await axios.post(url, {
       message: message,
@@ -147,7 +148,7 @@ router.post("/legacy-agent", async (req, res) => {
   if (!message || !user_id) return res.status(400).json({ error: "Faltan parámetros" });
 
   try {
-    const response = await axios.post("http://localhost:5000/agent", {
+    const response = await axios.post("https://chatbot-bbwb.onrender.com/agent", {
       message: message,
       user_id: user_id,
     });
