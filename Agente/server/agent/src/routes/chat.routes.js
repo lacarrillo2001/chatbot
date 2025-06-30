@@ -58,7 +58,7 @@ router.post("/message", async (req, res) => {
   };
   conversation.messages.push(userMessage);
 
-  const url = process.env.API_AGENTPYTHON;
+  const url = process.env.API_AGENTPYTHON_EVA;
   console.log("Backend URL:", url);
 
   try {
@@ -149,7 +149,7 @@ router.post("/legacy-agent", async (req, res) => {
   const { message, user_id } = req.body;
   if (!message || !user_id) return res.status(400).json({ error: "Faltan parámetros" });
 
-  const url = `${process.env.API_AGENTPYTHON}/agent`;
+  const url = process.env.API_AGENTPYTHON_EVA;
   console.log("Backend URL:", url);
   try {
     const response = await axios.post(url, {
