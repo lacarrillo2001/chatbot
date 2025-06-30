@@ -40,14 +40,18 @@ const DiarioEmocional: React.FC<DiarioEmocionalProps> = ({ userId }) => {
   const [resultadosTest, setResultadosTest] = useState<ResultadoTest[]>([]);
   const [tabActiva, setTabActiva] = useState<TabType>('resumen');
 
+   const urle = import.meta.env.VITE_API_EMOCIREUL;
+   console.log(urle)
+   const urlesta = import.meta.env.VITE_API_RESULTEST;
+   console.log(urlesta)
   useEffect(() => {
     axios
-      .get(`http://localhost:3003/api/emociones/emociones-con-respuestas/${userId}`)
+      .get(`${urle}/${userId}`)
       .then((res) => setEmociones(res.data))
       .catch((err) => console.error('Error emociones:', err));
 
     axios
-      .get(`http://localhost:3003/api/estadisticas/resultados-test/${userId}`)
+      .get(`${urlesta}/${userId}`)
       .then((res) => setResultadosTest(res.data))
       .catch((err) => console.error('Error test:', err));
   }, [userId]);
