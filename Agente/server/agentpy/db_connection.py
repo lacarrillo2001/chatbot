@@ -1,6 +1,8 @@
 import psycopg2
 from dotenv import load_dotenv
 import os
+import logging
+logger = logging.getLogger(__name__)
 
 # Cargar las variables de entorno
 load_dotenv()
@@ -27,16 +29,19 @@ def obtener_conexion_db():
 def ejecutar_query(connection, query, params=None, tipo="select"):
     cursor = connection.cursor()
     try:
+        logger.info("🟢 Ejecutando query SQL:")
+        logger.info("Query: %s", query)
+        logger.info("Params: %s", params)
+
         cursor.execute(query, params)
         if tipo in ["insert", "update", "delete"]:
             connection.commit()
         if tipo == "select":
             return cursor.fetchall()
     except Exception as e:
-        print("⚠️ Error en la consulta SQL:")
-        print("Query:", query)
-        print("Params:", params)
-        print("Excepción:", e)
+        logger.error("❌ Error en la consulta SQL", exc_info=True)
+        logger.error("Query: %s", query)
+        logger.error("Params: %s", params)
         connection.rollback()
         return None
     finally:
