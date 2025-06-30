@@ -149,8 +149,10 @@ router.post("/legacy-agent", async (req, res) => {
   const { message, user_id } = req.body;
   if (!message || !user_id) return res.status(400).json({ error: "Faltan parámetros" });
 
+    const url = process.env.API_AGENTPYTHON;
+  console.log("Backend URL:", url);
   try {
-    const response = await axios.post("https://chatbot-bbwb.onrender.com/agent", {
+    const response = await axios.post(url, {
       message: message,
       user_id: user_id,
     });
