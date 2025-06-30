@@ -5,3 +5,27 @@ Agente/server/agentpy/.env
 /Agente
 /Agente/server
 /Agente/server/agentpy
+
+# Ignorar archivos de configuración sensibles
+.env
+*.env
+
+# Ignorar entornos virtuales
+venv/
+.venv/
+
+# Ignorar archivos de Python compilados
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Ignorar archivos de logs
+*.log
+
+# Ignorar bases de datos locales
+*.sqlite3
+
+# Ignorar archivos del sistema
+.DS_Store
+Thumbs.db
+Agente/server/agentpy/.env
