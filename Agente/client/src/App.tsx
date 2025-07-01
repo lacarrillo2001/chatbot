@@ -473,7 +473,7 @@ if (!token && !isPublicPath) {
               />
               <div className="main-content">
                  <button onClick={() => setShowEtapaInfo(true)} className="info-button">
-                  ¿Qué significa esta etapa?
+                  ¿Qué significa esta etapah?
                 </button>
                 <div className="logout-container">
                   <button
