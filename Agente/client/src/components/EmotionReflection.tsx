@@ -9,11 +9,12 @@ interface EmotionReflectionProps {
   onAnswer: (answer: string) => void;
   userId: string;
   onResetEmotion: () => void;
-  onEmocionRegistrada: () => void;
+  //onEmocionRegistrada: () => void;
 
 }
 
-const EmotionReflection: React.FC<EmotionReflectionProps> = ({ emotion, onAnswer, userId, onResetEmotion, onEmocionRegistrada }) => {
+//const EmotionReflection: React.FC<EmotionReflectionProps> = ({ emotion, onAnswer, userId, onResetEmotion, onEmocionRegistrada }) => {
+const EmotionReflection: React.FC<EmotionReflectionProps> = ({ emotion, onAnswer, userId, onResetEmotion}) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(-1);  
   const [answer, setAnswer] = useState<string>("");  
   const [responses, setResponses] = useState<string[]>([]);  
@@ -151,7 +152,7 @@ if (finalResponses.length > 6) {
     setAnalysis(response.data.analysis);
 
     // ✅ Actualizar etapa cuando se recibe el análisis
-    await fetch(`http://localhost:3003/api/usuarios/${userId}/etapa`, {
+    await fetch(`${import.meta.env.VITE_API_ETAPA}${userId}/etapa`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -159,7 +160,7 @@ if (finalResponses.length > 6) {
       body: JSON.stringify({ nuevaEtapa: "emocion_registrada" }),
     });
 
-    onEmocionRegistrada(); // Notifica a App para cambiar etapa y módulo
+    //onEmocionRegistrada(); // Notifica a App para cambiar etapa y módulo
 
 
   } catch (error) {

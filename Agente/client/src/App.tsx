@@ -190,7 +190,7 @@ const getModulosDisponibles = (): Module[] => {
           ) {
             try {
               console.log("🎯 Etapa detectada por contenido del mensaje. Actualizando...");
-              await fetch(`http://localhost:3003/api/usuarios/${userId}/etapa`, {
+              await fetch(`${import.meta.env.VITE_API_ETAPA}${userId}/etapa`, {
                 method: "PUT",
                 headers: {
                   "Content-Type": "application/json",
