@@ -298,7 +298,7 @@ export const verifyEmail = async (req, res) => {
        WHERE id = $1`,
       [userId]
     );
-
+    
     res.json({ message: 'Correo verificado correctamente' });
   } catch (err) {
     console.error('❌ Error verificar correo:', err);
