@@ -43,9 +43,10 @@ import estadisticasRoutes from './routes/estadisticas.routes.js';
 import simulacionesRoutes from './routes/simulaciones.routes.js';
 import chatRoutes from './routes/chat.routes.js';
 import simuladorRoutes from './routes/simulador.routes.js';
-
-import pool from './db.js'; // conexión PostgreSQL
 import userRoutes from './routes/user.routes.js'
+import usuarioRoutes from './routes/infusuario.routes.js'
+import pool from './db.js'; // conexión PostgreSQL
+
 dotenv.config();
 
 const app = express();
@@ -63,7 +64,7 @@ app.use('/api/simulaciones', simulacionesRoutes);// MongoDB
 app.use('/api/chat', chatRoutes);                // Chat con agente
 app.use('/api/simulador', simuladorRoutes);      // Simulador social
 app.use('/api', userRoutes);
-
+app.use('/api/usuarios', usuarioRoutes);
 // Ruta de prueba de conexión a la base de datos
 app.get('/api/test-db', async (req, res) => {
   try {

@@ -4,7 +4,7 @@ import "./Login.css";
 
 
 interface Props {
-  onLoginSuccess: (token: string, userId: string) => void;
+  onLoginSuccess: (token: string, userId: string, token_info: string) => void;
   onRegisterClick?: () => void;
   onForgotClick: () => void;
 }
@@ -27,11 +27,13 @@ const Login: React.FC<Props> = ({ onLoginSuccess, onRegisterClick , onForgotClic
         username,
         password
       });
-
-      const { token, id } = res.data;
+      console.log("🧪 Respuesta del backend:", res.data); 
+      const { token, id, token_info } = res.data;
       localStorage.setItem("token", token);
       localStorage.setItem("userId", id);
-      onLoginSuccess(token, id);
+      localStorage.setItem("token_info", token_info);
+      onLoginSuccess(token, id, token_info);
+
     } catch (err: any) {
       if (err.response?.data?.error) {
         setError(err.response.data.error);

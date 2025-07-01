@@ -16,6 +16,8 @@ import VerifyEmail from './components/Register/VerifyEmail';
 import ResetPassword from './components/Register/ResetPassword';
 import ForgotPassword from './components/Register/ForgotPassword';
 import EtapaInfoModal from './components/Etapa/EtapaInfoModal';
+import UserMenu from './components/UserMenu/UserMenu';
+import UserInfoModal from './components/UserMenu/UserInfoModal';
 
 ////Componenete
 
@@ -54,10 +56,12 @@ const App: React.FC = () => {
   const currentState = chatStates[activeModule] || { messages: [], input: '', loading: false };
   const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
   const [userId, setUserId] = useState<string>(localStorage.getItem("userId") || "");
+  console.log("🔐 Token cargado desde localStorage:", token);
   const [view, setView] = useState<"login" | "register" | "forgot">("login");
   const [etapaUsuario, setEtapaUsuario] = useState<string>("");
-const [showEtapaInfo, setShowEtapaInfo] = useState(false);
-
+  const [showEtapaInfo, setShowEtapaInfo] = useState(false);
+  const [showUserInfoModal, setShowUserInfoModal] = useState(false);
+  const [userInfo, setUserInfo] = useState<any>(null);
   const [hasSentWelcome, setHasSentWelcome] = useState<Record<string, boolean>>({
   chat: false,
   chatevaluacion: false,
@@ -78,11 +82,13 @@ const getModulosDisponibles = (): Module[] => {
       return [];
   }
 };
-  const handleLoginSuccess = (token: string, userId: string) => {
-    setToken(token);
-    setUserId(userId);
-  };
-
+  const handleLoginSuccess = (token: string, userId: string, tokenInfo: string) => {
+  localStorage.setItem("token", token);
+  localStorage.setItem("userId", userId);
+  localStorage.setItem("token_info", tokenInfo);
+  setToken(token);
+  setUserId(userId);
+};
 
   const handleEmocionRegistrada = () => {
   setEtapaUsuario("emocion_registrada");
@@ -283,7 +289,7 @@ const getModulosDisponibles = (): Module[] => {
           onAnswer={handleAnswer}
           userId={userId}
           onResetEmotion={() => setSelectedEmotion("")}
-          onEmocionRegistrada={handleEmocionRegistrada}
+          //onEmocionRegistrada={handleEmocionRegistrada}
         />
 // Pasamos `userId`
       ) : (
@@ -306,6 +312,21 @@ const getModulosDisponibles = (): Module[] => {
     
   };
 
+const fetchUserInfo = async () => {
+  const tokenInfo = localStorage.getItem("token_info");
+  if (!tokenInfo) return;
+
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_INFO}?token=${tokenInfo}`);
+    if (!response.ok) throw new Error("No se pudo obtener la información");
+
+    const data = await response.json();
+    setUserInfo(data);
+    setShowUserInfoModal(true);
+  } catch (err) {
+    console.error("Error al obtener la información del usuario:", err);
+  }
+};
 
   const fetchEtapaUsuario = async (userId: string) => {
   try {
@@ -421,7 +442,7 @@ if (!token && !isPublicPath) {
     <div style={{ padding: "2rem", textAlign: "center" }}>
       {view === "login" ? (
         <Login 
-          onLoginSuccess={handleLoginSuccess} 
+          onLoginSuccess={handleLoginSuccess}
           onRegisterClick={() => setView("register")} 
           onForgotClick={() => setView("forgot")}  
         />
@@ -434,7 +455,10 @@ if (!token && !isPublicPath) {
   );
 }
 
-
+                console.log("🔐 Tokens:");
+console.log("token de sesión:", token);
+console.log("userId:", userId);
+console.log("token_info:", localStorage.getItem("token_info"));
 
 
  return (
@@ -464,6 +488,7 @@ if (!token && !isPublicPath) {
               )}
 
 
+
               <Sidebar
                 modules={getModulosDisponibles()}
                 activeModule={activeModule}
@@ -472,28 +497,35 @@ if (!token && !isPublicPath) {
                 toggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
               />
               <div className="main-content">
-                 <button onClick={() => setShowEtapaInfo(true)} className="info-button">
-                  ¿Qué significa esta etapah?
-                </button>
-                <div className="logout-container">
-                  <button
-                    className="logout-button"
-                    onClick={() => {
-                      localStorage.removeItem("token");
-                      localStorage.removeItem("userId");
-                      setToken(null);
-                      setUserId("");
-                    }}
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                      <polyline points="16,17 21,12 16,7" />
-                      <line x1="21" y1="12" x2="9" y2="12" />
-                    </svg>
-                    Cerrar sesión
-                  </button>
-                </div>
+                 
+                  
+               <div className="user-header-container">  
+
+      <button onClick={() => setShowEtapaInfo(true)} className="info-button">
+                        ¿Qué significa esta etapa?
+                      </button>
+                <UserMenu
+                  onLogout={() => {
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("userId");
+                    localStorage.removeItem("token_info");
+                    setToken(null);
+                    setUserId("");
+                  }}
+                  onShowInfo={(info) => {
+                    setUserInfo(info);
+                    setShowUserInfoModal(true);
+                  }}
+                />
+              </div>
+
                 {renderModuleContent()}
+                {showUserInfoModal && userInfo && (
+                  <UserInfoModal
+                    info={userInfo}
+                    onClose={() => setShowUserInfoModal(false)}
+                  />
+                )}
               </div>
             </div>
           )

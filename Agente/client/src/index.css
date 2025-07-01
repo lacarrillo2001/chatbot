@@ -686,3 +686,113 @@ body {
     font-size: 0.85rem;
   }
 }
+/* Contenedor del header con botón y menú de usuario */
+.user-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 12px 20px;
+  position: relative;
+}
+
+/* Botón de información */
+.info-button {
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.info-button:hover {
+  background-color: #e5e7eb;
+  border-color: #9ca3af;
+  color: #374151;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.info-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .user-header-container {
+    padding: 10px 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .info-button {
+    font-size: 12px;
+    padding: 6px 10px;
+    order: 2;
+    flex: 1;
+    min-width: 0;
+  }
+  
+  /* En móvil, el UserMenu va primero */
+  .user-header-container > :last-child {
+    order: 1;
+  }
+}
+
+/* Versión alternativa: si quieres el botón completamente a la izquierda de la pantalla */
+.info-button-fixed {
+  position: fixed;
+  left: 20px;
+  top: 20px;
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.info-button-fixed:hover {
+  background-color: #e5e7eb;
+  border-color: #9ca3af;
+  color: #374151;
+  transform: translateX(2px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.info-button-fixed:active {
+  transform: translateX(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .info-button-fixed {
+    left: 16px;
+    top: 16px;
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+  
+  .info-button-fixed:hover {
+    transform: translateY(1px);
+  }
+  
+  .info-button-fixed:active {
+    transform: translateY(0px);
+  }
+}

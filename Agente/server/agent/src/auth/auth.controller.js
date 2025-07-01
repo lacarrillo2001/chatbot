@@ -53,10 +53,27 @@ export const register = async (req, res) => {
     const userId = result.rows[0].id;
 
     // 🧩 5. Insertar en tabla usuarios
+
+     let tokenInfo;
+    let intentos = 0;
+
+    do {
+      tokenInfo = uuidv4();
+      const check = await pool.query(
+        'SELECT 1 FROM usuarios WHERE token_info = $1',
+        [tokenInfo]
+      );
+      if (check.rowCount === 0) break; // es único
+      intentos++;
+    } while (intentos < 5); // evita loop infinito
+
+    if (intentos >= 5) {
+      return res.status(500).json({ error: 'No se pudo generar un token único. Intente de nuevo.' });
+    }
       await pool.query(
-        `INSERT INTO public.usuarios (id, seudonimo, permisos, fecha_registro, etapa_flujo)
-        VALUES ($1, $2, $3, NOW(), $4)`,
-        [userId, username, '{}', 'inicio']
+        `INSERT INTO public.usuarios (id, seudonimo, permisos, fecha_registro, etapa_flujo, token_info)
+        VALUES ($1, $2, $3, NOW(), $4, $5)`,
+        [userId, username, '{}', 'inicio', tokenInfo]
       );
     // 🔐 6. Insertar en inicio_sesion
     await pool.query(
@@ -96,6 +113,10 @@ export const register = async (req, res) => {
       );
 
       await sendVerificationEmail(correo, verifyToken);
+
+
+
+     
 
     // ✅ 9. Éxito
     res.status(201).json({ message: 'Usuario registrado correctamente. Revisa tu correo para verificar tu cuenta.', id: userId });
@@ -147,8 +168,15 @@ export const login = async (req, res) => {
     if (!correoCheck.rows[0].correo_verificado) {
       return res.status(403).json({ error: 'Debes verificar tu correo electrónico para iniciar sesión' });
     }
+    // Obtener token_info desde la tabla usuarios
+    const tokenInfoQuery = await pool.query(
+      `SELECT token_info FROM usuarios WHERE id = $1`,
+      [user.id]
+    );
+    const token_info = tokenInfoQuery.rows[0]?.token_info || null;
 
-    res.json({ message: 'Login exitoso', token, id: user.id });
+    res.json({ message: 'Login exitoso', token, id: user.id , token_info });
+    
   } catch (error) {
     console.error('Error login:', error);
     res.status(500).json({ error: 'Error al hacer login' });

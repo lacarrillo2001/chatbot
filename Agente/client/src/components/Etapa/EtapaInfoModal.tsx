@@ -7,19 +7,19 @@ interface Props {
   etapa: string;
   onClose: () => void;
 }
-//gdgdgd
+
 const getEtapaDescripcion = (etapa: string): string => {
   switch (etapa) {
     case 'inicio':
-      return 'En esta etapa puedes comenzar tu primera evaluación para conocer tus niveles de ansiedad social.sdasdasdasdasdasd';
+      return 'Esta es la etapa inicial de tu proceso de evaluación psicológica. Aquí comenzarás tu primera evaluación para conocer y comprender tus niveles de ansiedad social. Es un punto de partida importante para entender tu estado emocional actual y establecer una línea base para tu desarrollo personal.';
     case 'test_completado':
-      return 'Has completado el test. Ahora puedes explorar tus emociones e interactuar con el asistente.';
+      return 'Felicitaciones, has completado exitosamente el test de evaluación. Ahora tienes acceso a herramientas avanzadas donde puedes explorar tus emociones de manera más profunda, interactuar con nuestro asistente especializado y recibir orientación personalizada basada en tus resultados.';
     case 'emocion_registrada':
-      return 'Has registrado una emoción. Continúa explorando o reflexionando sobre tu estado actual.';
+      return 'Has registrado satisfactoriamente una emoción en el sistema. Este registro es valioso para tu proceso de autoconocimiento. Te invitamos a continuar explorando otras emociones, reflexionar sobre tu estado emocional actual, o utilizar las herramientas de análisis disponibles para obtener insights más profundos.';
     case 'completo':
-      return 'Has completado todas las etapas disponibles. Puedes seguir revisando tus resultados.';
+      return 'Excelente trabajo, has completado todas las etapas disponibles en el módulo de evaluación psicológica. Ahora puedes revisar tus resultados en cualquier momento, acceder a tu historial emocional, consultar recomendaciones personalizadas y continuar monitoreando tu progreso a lo largo del tiempo.';
     default:
-      return 'Etapa desconocida.';
+      return 'La etapa actual no ha sido reconocida por el sistema. Por favor, contacta al soporte técnico si este problema persiste.';
   }
 };
 
@@ -27,9 +27,29 @@ const EtapaInfoModal: React.FC<Props> = ({ etapa, onClose }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>Etapa actualsss: <span style={{ textTransform: "capitalize" }}>{etapa}</span></h2>
-        <p>{getEtapaDescripcion(etapa)}</p>
-        <button onClick={onClose}>Cerrar</button>
+        <div className="modal-header">
+          <h2>Información de la Etapa</h2>
+          <button className="close-button" onClick={onClose} aria-label="Cerrar modal">
+            ×
+          </button>
+        </div>
+        
+        <div className="modal-body">
+          <div className="etapa-badge">
+            <span className="etapa-label">Etapa actual:</span>
+            <span className="etapa-name">{etapa.replace('_', ' ')}</span>
+          </div>
+          
+          <div className="descripcion-container">
+            <p className="descripcion-text">{getEtapaDescripcion(etapa)}</p>
+          </div>
+        </div>
+        
+        <div className="modal-footer">
+          <button className="primary-button" onClick={onClose}>
+            Entendido
+          </button>
+        </div>
       </div>
     </div>
   );
