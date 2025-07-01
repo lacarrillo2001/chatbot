@@ -1,0 +1,135 @@
+.user-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background-color 0.15s ease;
+}
+
+.user-menu:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #8b5cf6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.user-avatar:hover {
+  transform: scale(1.02);
+}
+
+.user-name {
+  font-weight: 400;
+  color: #374151;
+  font-size: 14px;
+  user-select: none;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  min-width: 160px;
+  overflow: hidden;
+  z-index: 1000;
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user-dropdown button {
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 400;
+  color: #374151;
+  transition: background-color 0.1s ease;
+  display: block;
+}
+
+.user-dropdown button:hover {
+  background-color: #f9fafb;
+}
+
+.user-dropdown button:first-child {
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.user-dropdown button:last-child {
+  color: #dc2626;
+}
+
+.user-dropdown button:last-child:hover {
+  background-color: #fef2f2;
+  color: #b91c1c;
+}
+
+/* Estilo para el estado de carga */
+.user-menu div[style*="color: red"] {
+  color: #6b7280 !important;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 6px 10px;
+  background-color: #f9fafb;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .user-menu {
+    gap: 6px;
+    padding: 4px 8px;
+  }
+  
+  .user-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+  
+  .user-name {
+    font-size: 13px;
+  }
+  
+  .user-dropdown {
+    min-width: 140px;
+    right: -5px;
+  }
+  
+  .user-dropdown button {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+}
