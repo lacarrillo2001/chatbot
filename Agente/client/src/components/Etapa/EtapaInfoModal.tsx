@@ -29,7 +29,7 @@ const EtapaInfoModal: React.FC<Props> = ({ etapa, onClose }) => {
       <div className="modal-content">
         <h2>Etapa actualsss: <span style={{ textTransform: "capitalize" }}>{etapa}</span></h2>
         <p>{getEtapaDescripcion(etapa)}</p>
-        <button onClick={onClose}>Cerrarrrrr</button>
+        <button onClick={onClose}>Cerrarrrrsssr</button>
       </div>
     </div>
   );
