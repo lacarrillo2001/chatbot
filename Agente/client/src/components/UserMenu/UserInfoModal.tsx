@@ -21,7 +21,7 @@ const UserInfoModal: React.FC<Props> = ({ info, onClose }) => {
         <p><strong>Correo:</strong> {info.correo}</p>
         <p><strong>Universidad:</strong> {info.universidad}</p>
         {info.carrera && <p><strong>Carrera:</strong> {info.carrera}</p>}
-        {info.semestre && <p><strong>Semestre:</strong> {info.semestre}</p>}
+        {info.semestre && <p><strong>Semestres:</strong> {info.semestre}</p>}
         <button className="cerrar-btn" onClick={onClose}>Cerrar</button>
       </div>
     </div>

@@ -233,43 +233,6 @@ const Register: React.FC<Props> = ({ onLoginClick }) => {
             />
           </div>
 
-          <h3 className="register-section-title">Información Académica</h3>
-
-          <div className="register-input-group">
-            <label className="register-label">Universidad</label>
-            <input
-              className="register-input"
-              name="universidad"
-              placeholder="Tu universidad"
-              value={form.universidad}
-              onChange={handleChange}
-              disabled={isLoading}
-            />
-          </div>
-
-          <div className="register-input-group">
-            <label className="register-label">Carrera</label>
-            <input
-              className="register-input"
-              name="carrera"
-              placeholder="Tu carrera"
-              value={form.carrera}
-              onChange={handleChange}
-              disabled={isLoading}
-            />
-          </div>
-
-          <div className="register-input-group">
-            <label className="register-label">Semestre</label>
-            <input
-              className="register-input"
-              name="semestre"
-              placeholder="Semestre actual"
-              value={form.semestre}
-              onChange={handleChange}
-              disabled={isLoading}
-            />
-          </div>
 
           {message && (
             <div className="register-message success">
