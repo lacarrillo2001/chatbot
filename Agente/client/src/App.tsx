@@ -128,10 +128,10 @@ const getModulosDisponibles = (): Module[] => {
   const getApiUrl = (moduleId: string) => {
     switch (moduleId) {
       case 'chatevaluacion':
-        return import.meta.env.VITE_API_EVALUACION || 'http://localhost:3003/api/chat/message';
+        return import.meta.env.VITE_API_EVALUACION;
       case 'chat':
       default:
-        return import.meta.env.VITE_API_CHAT || 'http://localhost:3003/api/simulador/message';
+        return import.meta.env.VITE_API_CHAT;
     }
   };
 
@@ -208,7 +208,7 @@ const getModulosDisponibles = (): Module[] => {
         ) {
           try {
             console.log("🎉 Simulación finalizada. Actualizando a etapa 'completo'...");
-            await fetch(`http://localhost:3003/api/usuarios/${userId}/etapa`, {
+            await fetch(`${import.meta.env.VITE_API_ETAPA}${userId}/etapa`, {
               method: "PUT",
               headers: {
                 "Content-Type": "application/json",
@@ -309,7 +309,7 @@ const getModulosDisponibles = (): Module[] => {
 
   const fetchEtapaUsuario = async (userId: string) => {
   try {
-    const response = await fetch(`http://localhost:3003/api/usuarios/${userId}/etapa`);
+    const response = await fetch(`${import.meta.env.VITE_API_ETAPA}${userId}/etapa`);
     if (!response.ok) throw new Error("Error al obtener la etapa");
     const data = await response.json();
     setEtapaUsuario(data.etapa);
