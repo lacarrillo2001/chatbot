@@ -6,7 +6,7 @@ import "./Login.css";
 interface Props {
   onLoginSuccess: (token: string, userId: string) => void;
   onRegisterClick?: () => void;
-  onForgotClick: () => void; // 👈 nueva prop
+  onForgotClick: () => void;
 }
 
 const Login: React.FC<Props> = ({ onLoginSuccess, onRegisterClick , onForgotClick}) => {
