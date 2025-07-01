@@ -1,2 +1,39 @@
+# General
+*.log
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+
+# Entornos virtuales y configuraciones del sistema
 .env
-node_modules
+.env.*       # Por si tienes .env.development, etc.
+.vscode/
+__pycache__/
+*.py[cod]
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Vite / React / Webpack
+dist/
+build/
+.cache/
+*.local
+
+# Test coverage
+coverage/
+*.lcov
+
+# IDEs
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Otros directorios específicos
+server/node_modules/
+client/node_modules/
