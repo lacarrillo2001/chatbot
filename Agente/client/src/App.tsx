@@ -32,7 +32,7 @@ const modules: Module[] = [
   { id: 'chatevaluacion', name: 'Chat Evaluaciones', icon: 'chat', description: 'AI Assistant for Evaluation' },
   { id: 'emociones', name: 'Explora tus Emociones', icon: 'emotions', description: 'Reflexiona sobre tus emociones' },
   { id: 'chat', name: 'Chat Simulacione', icon: 'chat-simulation', description: 'AI Assistant' },
-  { id: 'documents', name: 'Panel de administración', icon: 'admin-panel', description: 'Panel de administración simuladores' },
+ // { id: 'documents', name: 'Panel de administración', icon: 'admin-panel', description: 'Panel de administración simuladores' },
   
 
   /*{ id: 'code', name: 'Code', icon: 'code', description: 'Code Assistant' },

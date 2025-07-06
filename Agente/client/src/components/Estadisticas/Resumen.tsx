@@ -93,7 +93,7 @@ const Resumen: React.FC<ResumenProps> = ({ resultadosTest, emociones, setTabActi
         </div>
       </div>
 
-      {/* Sugerencias para seguir mejorando */}
+      {/* Sugerencias para seguir mejorando 
       {(resultadosTest.length < 3 || emociones.length < 5) && (
         <div className="sugerencias">
           <h4>🎯 Recomendaciones para ti:</h4>
@@ -121,7 +121,7 @@ const Resumen: React.FC<ResumenProps> = ({ resultadosTest, emociones, setTabActi
             )}
           </div>
         </div>
-      )}
+      )}*/}
 
       {resultadosTest.length > 0 && (
         <div className="card">
