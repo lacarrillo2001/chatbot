@@ -13,9 +13,9 @@ const getEtapaDescripcion = (etapa: string): string => {
     case 'inicio':
       return 'Esta es la etapa inicial de tu proceso de evaluación psicológica. Aquí comenzarás tu primera evaluación para conocer y comprender tus niveles de ansiedad social. Es un punto de partida importante para entender tu estado emocional actual y establecer una línea base para tu desarrollo personal.';
     case 'test_completado':
-      return 'Felicitaciones, has completado exitosamente el test de evaluación. Ahora tienes acceso a herramientas avanzadas donde puedes explorar tus emociones de manera más profunda, interactuar con nuestro asistente especializado y recibir orientación personalizada basada en tus resultados.';
+      return 'Felicitaciones, has completado exitosamente el test de evaluación. Ahora tienes acceso a herramientas avanzadas donde puedes explorar tus emociones de manera más profunda, y recibir orientación personalizada basada en tus resultados.';
     case 'emocion_registrada':
-      return 'Has registrado satisfactoriamente una emoción en el sistema. Este registro es valioso para tu proceso de autoconocimiento. Te invitamos a continuar explorando otras emociones, reflexionar sobre tu estado emocional actual, o utilizar las herramientas de análisis disponibles para obtener insights más profundos.';
+      return 'Has registrado satisfactoriamente una emoción en el sistema. A partir de este momento, se ha habilitado el módulo de simulación, el cual generará una situación personalizada basada en la emoción que registraste. Esta simulación te permitirá explorar cómo podrías afrontar dicha situación y reflexionar sobre tus reacciones.';
     case 'completo':
       return 'Excelente trabajo, has completado todas las etapas disponibles en el módulo de evaluación psicológica. Ahora puedes revisar tus resultados en cualquier momento, acceder a tu historial emocional, consultar recomendaciones personalizadas y continuar monitoreando tu progreso a lo largo del tiempo.';
     default:
