@@ -148,6 +148,8 @@ const sendResponsesToBackend = async (finalResponses: string[]) => {
     });
 
     setAnalysis(response.data.analysis);
+console.log("🧠 Análisis recibido del backend:");
+console.log(response.data.analysis);
 
     await fetch(`${import.meta.env.VITE_API_ETAPA}${userId}/etapa`, {
       method: "PUT",
@@ -219,6 +221,53 @@ const sendResponsesToBackend = async (finalResponses: string[]) => {
     );
   }
 
+  const cleanHtmlForSpeech = (htmlString: string) => {
+  const cleaned = htmlString
+    .replace(/<\/?h\d[^>]*>/g, ". ")    // reemplaza <h4>, <h3>, etc.
+    .replace(/<\/?p[^>]*>/g, ". ")      // reemplaza <p>
+    .replace(/<\/?li[^>]*>/g, ". ")     // reemplaza <li>
+    .replace(/<\/?ol[^>]*>/g, "")       // elimina <ol>
+    .replace(/<\/?ul[^>]*>/g, "")       // elimina <ul>
+    .replace(/<[^>]+>/g, "")            // elimina cualquier otra etiqueta
+    .replace(/\s+/g, " ")               // colapsa espacios múltiples
+    .trim();
+  return cleaned;
+};
+
+
+const speakText = (htmlString: string) => {
+  const tempElement = document.createElement("div");
+  tempElement.innerHTML = htmlString;
+  const plainText = tempElement.textContent || tempElement.innerText || "";
+
+  const utterance = new SpeechSynthesisUtterance(plainText);
+  const voices = window.speechSynthesis.getVoices();
+
+  const preferredVoices = [
+   
+    "Microsoft Sabina - Spanish (Mexico)"
+    
+    
+  ];
+
+  const selectedVoice = voices.find((voice) =>
+    preferredVoices.includes(voice.name)
+  );
+
+  if (selectedVoice) {
+    utterance.voice = selectedVoice;
+    console.log(`✅ Usando voz: ${selectedVoice.name}`);
+  } else {
+    console.warn("⚠️ Voz natural no disponible, usando por defecto.");
+  }
+
+  utterance.lang = "es-ES";
+  utterance.rate = 0.95; // velocidad natural
+  utterance.pitch = 1;   // tono estándar
+  speechSynthesis.speak(utterance);
+};
+
+
   // Dentro del return del componente principal:
 return (
   <div className="emotion-reflection-container">
@@ -270,7 +319,15 @@ return (
     <div
       className="analysis-html scroll-box"
       dangerouslySetInnerHTML={{ __html: analysis }}
+    
     ></div>
+<button
+  className="speak-button"
+  onClick={() => speakText(analysis)}
+  style={{ marginTop: "10px" }}
+>
+  🔊 Escuchar análisis
+</button>
 
     <button
       className="reset-button"
