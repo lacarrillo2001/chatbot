@@ -27,13 +27,130 @@ const Register: React.FC<Props> = ({ onLoginClick }) => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({});
+
+  const calculateAge = (birthDate: string): string => {
+    if (!birthDate) return "";
+    
+    const today = new Date();
+    const birth = new Date(birthDate);
+    
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+    
+    return age.toString();
+  };
+
+  const validateField = (name: string, value: string): string => {
+    switch (name) {
+      case 'username':
+        if (value.length < 3) return 'El usuario debe tener al menos 3 caracteres';
+        if (value.length > 20) return 'El usuario no puede tener más de 20 caracteres';
+        if (!/^[a-zA-Z0-9_]+$/.test(value)) return 'Solo se permiten letras, números y guiones bajos';
+        break;
+      
+      case 'password':
+        if (value.length < 6) return 'La contraseña debe tener al menos 6 caracteres';
+        if (value.length > 50) return 'La contraseña no puede tener más de 50 caracteres';
+        break;
+      
+      case 'nombre':
+        if (value.length < 2) return 'El nombre debe tener al menos 2 caracteres';
+        if (value.length > 50) return 'El nombre no puede tener más de 50 caracteres';
+        if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value)) return 'Solo se permiten letras y espacios';
+        break;
+      
+      case 'apellido':
+        if (value.length < 2) return 'El apellido debe tener al menos 2 caracteres';
+        if (value.length > 50) return 'El apellido no puede tener más de 50 caracteres';
+        if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value)) return 'Solo se permiten letras y espacios';
+        break;
+      
+      case 'correo':
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Formato de correo inválido';
+        break;
+      
+      case 'fechanacimiento':
+        if (!value) return 'La fecha de nacimiento es requerida';
+        const birthDate = new Date(value);
+        const today = new Date();
+        const age = today.getFullYear() - birthDate.getFullYear();
+        
+        if (birthDate > today) return 'La fecha de nacimiento no puede ser futura';
+        if (age < 16) return 'Debes tener al menos 16 años';
+        if (age > 100) return 'Fecha de nacimiento inválida';
+        break;
+      
+      case 'telefono':
+        if (value && !/^\d{10}$/.test(value.replace(/\D/g, ''))) return 'El teléfono debe tener 10 dígitos';
+        break;
+      
+      case 'direccion':
+        if (value && value.length > 200) return 'La dirección no puede tener más de 200 caracteres';
+        break;
+    }
+    return '';
+  };
+
+  const validateForm = (): boolean => {
+    const errors: {[key: string]: string} = {};
+    
+    // Validar campos requeridos
+    const requiredFields = ['username', 'password', 'nombre', 'apellido', 'correo', 'fechanacimiento'];
+    
+    requiredFields.forEach(field => {
+      const value = form[field as keyof typeof form];
+      if (!value.trim()) {
+        errors[field] = 'Este campo es requerido';
+      } else {
+        const fieldError = validateField(field, value);
+        if (fieldError) errors[field] = fieldError;
+      }
+    });
+    
+    // Validar campos opcionales si tienen valor
+    const optionalFields = ['telefono', 'direccion'];
+    optionalFields.forEach(field => {
+      const value = form[field as keyof typeof form];
+      if (value) {
+        const fieldError = validateField(field, value);
+        if (fieldError) errors[field] = fieldError;
+      }
+    });
+    
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    
+    // Limpiar error de validación del campo que se está editando
+    if (validationErrors[name]) {
+      setValidationErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+    
+    if (name === "fechanacimiento") {
+      const calculatedAge = calculateAge(value);
+      setForm({ ...form, [name]: value, edad: calculatedAge });
+    } else {
+      setForm({ ...form, [name]: value });
+    }
   };
 
   const handleSubmit = async () => {
+    if (!validateForm()) {
+      setError("Por favor corrige los errores antes de continuar");
+      return;
+    }
+    
     setIsLoading(true);
     setError(null);
     setMessage(null);
@@ -96,7 +213,7 @@ const Register: React.FC<Props> = ({ onLoginClick }) => {
           <div className="register-input-group">
             <label className="register-label">Usuario *</label>
             <input
-              className="register-input"
+              className={`register-input ${validationErrors.username ? 'register-input-error' : ''}`}
               name="username"
               placeholder="Elige tu nombre de usuario"
               value={form.username}
@@ -104,12 +221,15 @@ const Register: React.FC<Props> = ({ onLoginClick }) => {
               disabled={isLoading}
               required
             />
+            {validationErrors.username && (
+              <div className="register-validation-error">{validationErrors.username}</div>
+            )}
           </div>
 
           <div className="register-input-group">
             <label className="register-label">Contraseña *</label>
             <input
-              className="register-input"
+              className={`register-input ${validationErrors.password ? 'register-input-error' : ''}`}
               name="password"
               type="password"
               placeholder="Crea una contraseña segura"
@@ -118,6 +238,9 @@ const Register: React.FC<Props> = ({ onLoginClick }) => {
               disabled={isLoading}
               required
             />
+            {validationErrors.password && (
+              <div className="register-validation-error">{validationErrors.password}</div>
+            )}
           </div>
 
           <h3 className="register-section-title">Información Personal</h3>
@@ -125,7 +248,7 @@ const Register: React.FC<Props> = ({ onLoginClick }) => {
           <div className="register-input-group">
             <label className="register-label">Nombre *</label>
             <input
-              className="register-input"
+              className={`register-input ${validationErrors.nombre ? 'register-input-error' : ''}`}
               name="nombre"
               placeholder="Tu nombre"
               value={form.nombre}
@@ -133,12 +256,15 @@ const Register: React.FC<Props> = ({ onLoginClick }) => {
               disabled={isLoading}
               required
             />
+            {validationErrors.nombre && (
+              <div className="register-validation-error">{validationErrors.nombre}</div>
+            )}
           </div>
 
           <div className="register-input-group">
             <label className="register-label">Apellido *</label>
             <input
-              className="register-input"
+              className={`register-input ${validationErrors.apellido ? 'register-input-error' : ''}`}
               name="apellido"
               placeholder="Tu apellido"
               value={form.apellido}
@@ -146,12 +272,15 @@ const Register: React.FC<Props> = ({ onLoginClick }) => {
               disabled={isLoading}
               required
             />
+            {validationErrors.apellido && (
+              <div className="register-validation-error">{validationErrors.apellido}</div>
+            )}
           </div>
 
           <div className="register-input-group">
             <label className="register-label">Correo Electrónico *</label>
             <input
-              className="register-input"
+              className={`register-input ${validationErrors.correo ? 'register-input-error' : ''}`}
               name="correo"
               placeholder="tu@email.com"
               type="email"
@@ -160,6 +289,25 @@ const Register: React.FC<Props> = ({ onLoginClick }) => {
               disabled={isLoading}
               required
             />
+            {validationErrors.correo && (
+              <div className="register-validation-error">{validationErrors.correo}</div>
+            )}
+          </div>
+
+          <div className="register-input-group">
+            <label className="register-label">Fecha de Nacimiento *</label>
+            <input
+              className={`register-input ${validationErrors.fechanacimiento ? 'register-input-error' : ''}`}
+              name="fechanacimiento"
+              type="date"
+              value={form.fechanacimiento}
+              onChange={handleChange}
+              disabled={isLoading}
+              required
+            />
+            {validationErrors.fechanacimiento && (
+              <div className="register-validation-error">{validationErrors.fechanacimiento}</div>
+            )}
           </div>
 
           <div className="register-input-group">
@@ -167,26 +315,14 @@ const Register: React.FC<Props> = ({ onLoginClick }) => {
             <input
               className="register-input"
               name="edad"
-              placeholder="Tu edad"
+              placeholder="Se calcula automáticamente"
               type="number"
               min="16"
               max="100"
               value={form.edad}
               onChange={handleChange}
-              disabled={isLoading}
+              disabled={true}
               required
-            />
-          </div>
-
-          <div className="register-input-group">
-            <label className="register-label">Fecha de Nacimiento</label>
-            <input
-              className="register-input"
-              name="fechanacimiento"
-              type="date"
-              value={form.fechanacimiento}
-              onChange={handleChange}
-              disabled={isLoading}
             />
           </div>
 
@@ -211,7 +347,7 @@ const Register: React.FC<Props> = ({ onLoginClick }) => {
           <div className="register-input-group">
             <label className="register-label">Teléfono</label>
             <input
-              className="register-input"
+              className={`register-input ${validationErrors.telefono ? 'register-input-error' : ''}`}
               name="telefono"
               placeholder="Tu número de teléfono"
               type="tel"
@@ -219,18 +355,24 @@ const Register: React.FC<Props> = ({ onLoginClick }) => {
               onChange={handleChange}
               disabled={isLoading}
             />
+            {validationErrors.telefono && (
+              <div className="register-validation-error">{validationErrors.telefono}</div>
+            )}
           </div>
 
           <div className="register-input-group full-width">
             <label className="register-label">Dirección</label>
             <input
-              className="register-input"
+              className={`register-input ${validationErrors.direccion ? 'register-input-error' : ''}`}
               name="direccion"
               placeholder="Tu dirección completa"
               value={form.direccion}
               onChange={handleChange}
               disabled={isLoading}
             />
+            {validationErrors.direccion && (
+              <div className="register-validation-error">{validationErrors.direccion}</div>
+            )}
           </div>
 
 
