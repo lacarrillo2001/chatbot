@@ -203,7 +203,8 @@ const getModulosDisponibles = (): Module[] => {
                 },
                 body: JSON.stringify({ nuevaEtapa: "test_completado" }),
               });
-              setEtapaUsuario("test_completado");
+              await fetchEtapaUsuario(userId);
+
             } catch (err) {
               console.error("❌ Error al actualizar etapa:", err);
             }
@@ -221,7 +222,8 @@ const getModulosDisponibles = (): Module[] => {
               },
               body: JSON.stringify({ nuevaEtapa: "completo" }),
             });
-            setEtapaUsuario("completo");
+            await fetchEtapaUsuario(userId);
+
           } catch (err) {
             console.error("❌ Error al actualizar etapa a 'completo':", err);
           }

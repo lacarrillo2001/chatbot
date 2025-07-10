@@ -18,7 +18,8 @@ const EmotionReflection: React.FC<EmotionReflectionProps> = ({ emotion, onAnswer
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(-1);  
   const [answer, setAnswer] = useState<string>("");  
   const [responses, setResponses] = useState<string[]>([]);  
-  const [loading, setLoading] = useState<boolean>(false);  
+  const [loading, setLoading] = useState<boolean>(false); 
+  const [isFinalizing, setIsFinalizing] = useState<boolean>(false); 
   const [analysis, setAnalysis] = useState<string>("");  
   const [situation, setSituation] = useState<string>("");  
   const [bodyLocation, setBodyLocation] = useState<string>("");
@@ -97,14 +98,15 @@ const handleAnswerSubmit = async () => {
   if (!answer.trim() || loading) return;
 
   const isLastQuestion = currentQuestionIndex === questions[emotion].length - 1;
-
   const newResponses = [...responses, answer];
+
   setResponses(newResponses);
   onAnswer(answer);
   setAnswer("");
 
   if (isLastQuestion) {
-    setLoading(true); // evitar doble envío
+    
+    setLoading(true);      // Mostrar procesando
     await sendResponsesToBackend(newResponses);
     setLoading(false);
   } else {
@@ -120,13 +122,11 @@ const handleAnswerSubmit = async () => {
   };
 
 const sendResponsesToBackend = async (finalResponses: string[]) => {
-  setLoading(true);
-if (finalResponses.length > 6) {
-  console.warn("⚠️ Hay más de 6 respuestas. Se recortarán.");
-  finalResponses = finalResponses.slice(0, 6);
-}
+  if (finalResponses.length > 6) {
+    console.warn("⚠️ Hay más de 6 respuestas. Se recortarán.");
+    finalResponses = finalResponses.slice(0, 6);
+  }
 
-  // 🔍 Mostrar en consola lo que se enviará al backend
   console.log("📤 Enviando al backend:", {
     user_id: userId,
     emotion: emotion,
@@ -137,9 +137,7 @@ if (finalResponses.length > 6) {
   });
 
   try {
-    
     const url = import.meta.env.VITE_API_EMOTION;
-    console.log(url)
     const response = await axios.post(url, {
       user_id: userId,
       emotion: emotion,
@@ -151,7 +149,6 @@ if (finalResponses.length > 6) {
 
     setAnalysis(response.data.analysis);
 
-    // ✅ Actualizar etapa cuando se recibe el análisis
     await fetch(`${import.meta.env.VITE_API_ETAPA}${userId}/etapa`, {
       method: "PUT",
       headers: {
@@ -159,16 +156,14 @@ if (finalResponses.length > 6) {
       },
       body: JSON.stringify({ nuevaEtapa: "emocion_registrada" }),
     });
-
-    //onEmocionRegistrada(); // Notifica a App para cambiar etapa y módulo
-
-
   } catch (error) {
     console.error("❌ Error al enviar las respuestas:", error);
   } finally {
     setLoading(false);
+    // ✅ aquí lo devolvemos a falso para que se muestre el análisis
   }
 };
+
 
   if (currentQuestionIndex === -1) {
     return (
@@ -228,46 +223,46 @@ if (finalResponses.length > 6) {
 return (
   <div className="emotion-reflection-container">
     <h2 className="emotion-title">{emotion}</h2>
-    <div className="question-container">
-      <p style={{ color: "black" }}>{questions[emotion][currentQuestionIndex]}</p>
-      <textarea
-        className="answer-textarea"
-        value={answer}
-        onChange={handleAnswerChange}
-        placeholder="Escribe tu respuesta aquí"
-      />
-      <div className="button-group">
-        {/* 🔄 Botón para regresar a la pregunta anterior */}
-        <button
-          className="prev-button"
-          onClick={() => {
-            if (currentQuestionIndex > 0) {
-              setCurrentQuestionIndex(currentQuestionIndex - 1);
-              const updatedResponses = [...responses];
-              updatedResponses.pop(); // quita la última
-              setResponses(updatedResponses);
-              setAnswer(updatedResponses[updatedResponses.length - 1] || "");
-            }
-          }}
-          disabled={currentQuestionIndex === 0}
-        >
-          ⬅ Pregunta anterior
-        </button>
+    
+   {!analysis && currentQuestionIndex >= 0 && (
+  <div className="question-container">
+    <p style={{ color: "black" }}>{questions[emotion][currentQuestionIndex]}</p>
+    <textarea
+      className="answer-textarea"
+      value={answer}
+      onChange={handleAnswerChange}
+      placeholder="Escribe tu respuesta aquí"
+    />
+    <div className="button-group">
+      <button
+        className="prev-button"
+        onClick={() => {
+          if (currentQuestionIndex > 0) {
+            setCurrentQuestionIndex(currentQuestionIndex - 1);
+            const updatedResponses = [...responses];
+            updatedResponses.pop(); // quita la última
+            setResponses(updatedResponses);
+            setAnswer(updatedResponses[updatedResponses.length - 1] || "");
+          }
+        }}
+        disabled={currentQuestionIndex === 0}
+      >
+        ⬅ Pregunta anterior
+      </button>
 
-        <button
-          className="submit-button"
-          onClick={handleAnswerSubmit}
-          disabled={loading || !answer.trim()} // <- desactiva si vacío o cargando
-        >
-          {loading ? "Procesando..." : "Enviar Respuesta"}
-        </button>
-
-        {/* 🔄 Botón para elegir otra emoción */}
-       
-      </div>
+      <button
+        className="submit-button"
+        onClick={handleAnswerSubmit}
+        disabled={loading || !answer.trim()}
+      >
+        {loading ? "Procesando..." : "Enviar Respuesta"}
+      </button>
     </div>
+  </div>
+)}
 
-    {loading && <p className="loading-text">Procesando tus respuestas...</p>}
+
+    {/* {loading && <p className="loading-text">Procesando tus respuestas...</p>} */}
 
     {analysis && !loading && (
   <div className="analysis-container">
