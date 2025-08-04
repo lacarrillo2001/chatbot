@@ -1,0 +1,23 @@
+.test-buttons-container {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin: 16px 0;
+}
+
+.test-button {
+  background-color: #4b6cff;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(75, 108, 255, 0.3);
+  transition: transform 0.2s, background-color 0.3s;
+}
+
+.test-button:hover {
+  background-color: #3655d8;
+  transform: scale(1.05);
+}
