@@ -90,11 +90,29 @@ const getModulosDisponibles = (): Module[] => {
   setUserId(userId);
 };
 
-  const handleEmocionRegistrada = () => {
-  setEtapaUsuario("emocion_registrada");
-  setActiveModule("chat"); // Ir directamente a Simulaciones
+const handleEmocionRegistrada = () => {
+  const nuevaEtapa = "emocion_registrada";
+  setEtapaUsuario(nuevaEtapa);
+
+  // 🔁 Forzar la lógica de cambio de módulo al cambiar etapa
+  const modulos = getModulosDisponiblesEtapa(nuevaEtapa);
+  setEtapaUsuario(nuevaEtapa);
 };
 
+const getModulosDisponiblesEtapa = (etapa: string): Module[] => {
+  switch (etapa) {
+    case "inicio":
+      return modules.filter(m => m.id === "chatevaluacion");
+    case "test_completado":
+      return modules.filter(m => ["chatevaluacion", "emociones"].includes(m.id));
+    case "emocion_registrada":
+      return modules.filter(m => ["chatevaluacion", "emociones", "chat"].includes(m.id));
+    case "completo":
+      return modules;
+    default:
+      return [];
+  }
+};
 
   const handleEmotionSelection = (emotion: string) => {
     setSelectedEmotion(emotion);  // Establecer la emoción seleccionada
@@ -291,7 +309,7 @@ const getModulosDisponibles = (): Module[] => {
           onAnswer={handleAnswer}
           userId={userId}
           onResetEmotion={() => setSelectedEmotion("")}
-          //onEmocionRegistrada={handleEmocionRegistrada}
+          onEmocionRegistrada={handleEmocionRegistrada}
         />
 // Pasamos `userId`
       ) : (
@@ -360,10 +378,12 @@ useEffect(() => {
 
 useEffect(() => {
   const disponibles = getModulosDisponibles();
-  if (!disponibles.some(m => m.id === activeModule)) {
-    setActiveModule(disponibles[0]?.id || "diario");
-  }
+  setSidebarCollapsed(false); // 👈 fuerza que el sidebar se reconstruya visualmente
+  setActiveModule(prev =>
+    disponibles.some(m => m.id === prev) ? prev : disponibles[0]?.id || "diario"
+  );
 }, [etapaUsuario]);
+
 useEffect(() => {
   if (userId) {
     // Reiniciar los chats al cambiar de usuario

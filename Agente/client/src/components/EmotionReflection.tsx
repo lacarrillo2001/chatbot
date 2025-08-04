@@ -9,12 +9,13 @@ interface EmotionReflectionProps {
   onAnswer: (answer: string) => void;
   userId: string;
   onResetEmotion: () => void;
-  //onEmocionRegistrada: () => void;
+  onEmocionRegistrada: () => void;
 
 }
 
 //const EmotionReflection: React.FC<EmotionReflectionProps> = ({ emotion, onAnswer, userId, onResetEmotion, onEmocionRegistrada }) => {
-const EmotionReflection: React.FC<EmotionReflectionProps> = ({ emotion, onAnswer, userId, onResetEmotion}) => {
+const EmotionReflection: React.FC<EmotionReflectionProps> = ({ emotion, onAnswer, userId, onResetEmotion,
+  onEmocionRegistrada}) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(-1);  
   const [answer, setAnswer] = useState<string>("");  
   const [responses, setResponses] = useState<string[]>([]);  
@@ -158,6 +159,7 @@ console.log(response.data.analysis);
       },
       body: JSON.stringify({ nuevaEtapa: "emocion_registrada" }),
     });
+    onEmocionRegistrada();
   } catch (error) {
     console.error("❌ Error al enviar las respuestas:", error);
   } finally {

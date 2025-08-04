@@ -1,6 +1,8 @@
 // /src/components/ChatModule.tsx
 import React, { useEffect, useRef } from 'react';
 import type { Message } from '../types';
+import BotonesSeleccionTest from "./BotonesSeleccionTest"; // asegúrate de que la ruta sea correcta
+
 
 interface ChatModuleProps {
   messages: Message[];
@@ -8,7 +10,7 @@ interface ChatModuleProps {
   loading: boolean;
   onInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onKeyPress: (e: React.KeyboardEvent) => void;
-  onSendMessage: () => void;
+  onSendMessage: (mensaje?: string) => void;
   textareaRef: React.RefObject<HTMLTextAreaElement | null>;
   selectedEmotion: string | null;  // Aseguramos que `selectedEmotion` esté definido aquí
   showTestOptions?: boolean;
@@ -48,9 +50,13 @@ const ChatModule: React.FC<ChatModuleProps> = ({
         const lastMessageObj = messages.length > 0 ? messages[messages.length - 1] : null;
         const lastMessage = lastMessageObj?.content || '';
         const isAIMessage = lastMessageObj?.sender === 'ai';
+        
+
         const isTestQuestion = lastMessageObj?.is_test_question === true;
+       
         const testType = lastMessageObj?.test_type;
         const fase = lastMessageObj?.fase;
+        const mostrarBotonesSeleccionTest = showTestOptions && isAIMessage && !isTestQuestion && !testType;
 
         const etiquetas: { [key: string]: string[] } = {
             SINP: ['Ninguno', 'Leve', 'Moderado', 'Severo', 'Extremadamente'],
@@ -65,13 +71,6 @@ const ChatModule: React.FC<ChatModuleProps> = ({
 
           const labels = etiquetas[key] || [];
           const opciones = labels.map((_, i) => i);
-
-
-
-
-
-
-
 
   return (
     <>
@@ -109,6 +108,8 @@ const ChatModule: React.FC<ChatModuleProps> = ({
 
 
       <div className="test-options-container">
+      
+
           {showTestOptions && isAIMessage && isTestQuestion && (
           <div className="button-options">
             {opciones.map((num) => (
@@ -123,7 +124,9 @@ const ChatModule: React.FC<ChatModuleProps> = ({
           </div>
         )}
 
-
+        {mostrarBotonesSeleccionTest && (
+        <BotonesSeleccionTest onSelect={(mensaje) => onSendMessage(mensaje)} />
+      )}
       </div>
         
 
