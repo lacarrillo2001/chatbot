@@ -7,3 +7,4 @@ langchain-groq
 openai
 pymongo
 psycopg2-binary
+gunicorn
