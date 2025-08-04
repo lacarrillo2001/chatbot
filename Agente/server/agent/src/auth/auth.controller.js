@@ -84,18 +84,19 @@ export const register = async (req, res) => {
 
     // 👤 7. Insertar en informacion_personal
     await pool.query(
-      `INSERT INTO public.informacion_personal (
-        id, nombre, apellido, correo, edad, fechanacimiento, telefono,
-        direccion, universidad, carrera, semestre, genero
-      ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7,
-        $8, $9, $10, $11, $12
-      )`,
-      [
-        userId, nombre, apellido, correo, edad, fechanacimiento, telefono,
-        direccion, universidad, carrera, semestre, genero
-      ]
-    );
+    `INSERT INTO public.informacion_personal (
+      id, nombre, apellido, correo, edad, fechanacimiento, telefono,
+      direccion, universidad, carrera, semestre, genero, correo_verificado
+    ) VALUES (
+      $1, $2, $3, $4, $5, $6, $7,
+      $8, $9, $10, $11, $12, TRUE
+    )`,
+    [
+      userId, nombre, apellido, correo, edad, fechanacimiento, telefono,
+      direccion, universidad, carrera, semestre, genero
+    ]
+  );
+
 
     // 📩 8. Generar token y fecha de expiración (justo antes del UPDATE)
       const verifyToken = uuidv4();

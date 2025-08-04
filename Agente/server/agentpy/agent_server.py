@@ -310,8 +310,15 @@ def endpoint_simulador():
     if not message or not user_id:
         return jsonify({"error": "Faltan datos"}), 400
 
+    # 🟢 Si el usuario escribe "inicio" o "ayuda", reiniciar estado y dar bienvenida
+    if message.lower() in ["inicio", "ayuda"]:
+        simulador.estado_usuario[user_id] = {"estado": "inicio"}
+        return jsonify(simulador.interactuar(user_id, "f"))  # o mensaje vacío
+
+    # 🟢 Flujo normal
     response = simulador.interactuar(user_id, message)
     return jsonify(response)
+
 
 @app.route('/emotion_responses', methods=['POST'])
 def emotion_responses():  
